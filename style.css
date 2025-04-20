@@ -1,0 +1,342 @@
+/* Comment out the old Martius font-face rule */
+/*
+@font-face {
+    font-family: 'Martius';
+    src: url('fonts/Martius-Regular.woff2') format('woff2'),
+         url('fonts/Martius-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+*/
+
+/* Add new @font-face rules for Grenze Gotisch */
+@font-face {
+    font-family: 'Grenze Gotisch';
+    src: url('fonts/Grenze Gotisch Thin.ttf') format('truetype');
+    font-weight: 100; /* Thin */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Grenze Gotisch';
+    src: url('fonts/Grenze Gotisch ExtraLight.ttf') format('truetype');
+    font-weight: 200; /* ExtraLight */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Grenze Gotisch';
+    src: url('fonts/Grenze Gotisch Light.ttf') format('truetype');
+    font-weight: 300; /* Light */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Grenze Gotisch';
+    src: url('fonts/Grenze Gotisch Regular.ttf') format('truetype');
+    font-weight: 400; /* Regular */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Grenze Gotisch';
+    src: url('fonts/Grenze Gotisch Medium.ttf') format('truetype');
+    font-weight: 500; /* Medium */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Grenze Gotisch';
+    src: url('fonts/Grenze Gotisch SemiBold.ttf') format('truetype');
+    font-weight: 600; /* SemiBold */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Grenze Gotisch';
+    src: url('fonts/Grenze Gotisch Bold.ttf') format('truetype');
+    font-weight: 700; /* Bold */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Grenze Gotisch';
+    src: url('fonts/Grenze Gotisch ExtraBold.ttf') format('truetype');
+    font-weight: 800; /* ExtraBold */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Grenze Gotisch';
+    src: url('fonts/Grenze Gotisch Black.ttf') format('truetype');
+    font-weight: 900; /* Black */
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Add @font-face rule for VinronRegular */
+@font-face {
+    font-family: 'Vinron'; /* Using 'Vinron' as family name */
+    src: url('fonts/VinronRegular.otf') format('opentype');
+    font-weight: 400; /* Regular weight */
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Main Logo Styling */
+#main-logo {
+    display: block; /* Needed to allow margin auto to work */
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1.5rem; /* Adjusted space below the logo */
+    max-width: 300px; /* Adjust size as needed, maintains aspect ratio */
+    height: auto; /* Maintain aspect ratio */
+}
+
+/* General Body Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Vinron', 'Grenze Gotisch', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Update font family - Vinron first */
+    font-weight: 400; /* Use Regular weight */
+    font-size: 22px; /* Increased base font size */
+    line-height: 1.7;
+    color: #e0e0e0; /* Light grey text */
+    background-color: #121212; /* Very dark background */
+    padding: 0; /* Remove body padding, rely on container padding */
+}
+
+header {
+    background: #1f1f1f; /* Slightly lighter dark */
+    color: #ffffff;
+    padding: 1.5rem 0;
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 5px solid #ff4d4d; /* Brighter Red accent */
+}
+
+header h1 {
+    margin-bottom: 0.75rem;
+    font-weight: 600; /* Use SemiBold weight */
+    font-family: 'Grenze Gotisch', sans-serif; /* Ensure Grenze Gotisch */
+    font-size: 4rem; /* Make header much larger */
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 18px;
+}
+
+nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.1rem; /* Relative to body font size */
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover,
+nav ul li a i:hover {
+    color: #ff8a8a; /* Lighter red for hover */
+}
+
+nav ul li a i.fa-discord {
+    font-size: 1.6rem; /* Slightly larger Discord icon */
+    vertical-align: middle;
+}
+
+/* Central container for main content */
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 0 20px; /* Padding on the sides */
+    width: 100%; /* Ensure container doesn't exceed viewport */
+}
+
+main {
+    background: #1e1e1e; /* Dark background for main content area */
+    padding: 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Enhanced shadow for dark theme */
+    margin-bottom: 30px; /* Add margin below main */
+}
+
+section {
+    margin-bottom: 35px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #444; /* Darker border */
+}
+
+section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+h2 {
+    color: #ff4d4d; /* Brighter Red accent for headings */
+    margin-bottom: 18px;
+    font-weight: 700; /* Use Bold weight */
+    font-family: 'Grenze Gotisch', sans-serif; /* Ensure Grenze Gotisch */
+    border-bottom: 2px solid #555; /* Subtle underline */
+    padding-bottom: 8px;
+    display: inline-block; /* Prevent underline from spanning full width */
+}
+
+ul {
+    margin-left: 25px;
+    margin-bottom: 18px;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+li strong {
+    color: #ff8a8a; /* Highlight strong text */
+    font-weight: 600; /* Make strong text SemiBold */
+    font-family: 'Grenze Gotisch', sans-serif; /* Ensure Grenze Gotisch */
+    font-size: 1.15em; /* Increase font size slightly */
+}
+
+.gallery-placeholder,
+.flyers-placeholder {
+    min-height: 180px;
+    background-color: #2a2a2a; /* Darker placeholder background */
+    border: 2px dashed #555; /* Darker dashed border */
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888; /* Lighter placeholder text */
+    font-style: italic;
+    margin-top: 20px;
+}
+
+footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px 0;
+    color: #aaa; /* Lighter footer text */
+    font-size: 0.9em;
+    border-top: 1px solid #333; /* Subtle top border */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    body {
+        font-size: 21px; /* Increased base font size for smaller screens */
+    }
+
+    header {
+        padding: 1rem 0;
+        margin-bottom: 20px;
+    }
+
+    header h1 {
+        font-size: 1.8rem; /* Adjust heading size */
+    }
+
+    nav ul li {
+        margin: 10px 0;
+        text-align: center;
+    }
+
+     nav ul li a i.fa-discord {
+        font-size: 1.5rem; /* Adjust icon size */
+    }
+
+    .container {
+        padding: 0 15px; /* Reduce side padding */
+    }
+
+    main {
+        padding: 20px; /* Adjust padding inside main */
+    }
+
+    h2 {
+        font-size: 1.6rem; /* Adjust section heading size */
+    }
+
+    ul {
+        margin-left: 15px; /* Reduce list indentation */
+    }
+}
+
+@media (max-width: 480px) {
+     header h1 {
+        font-size: 1.6rem;
+    }
+    h2 {
+        font-size: 1.4rem;
+    }
+    /* Further adjustments for very small screens if necessary */
+}
+
+/* Welcome Header Styling */
+#welcome-header {
+    color: #ffffff; /* White text */
+    text-align: center; /* Center align the text */
+    font-size: 2.5rem; /* Large font size - adjust as needed */
+    font-weight: 700; /* Bold font weight */
+    font-family: 'Grenze Gotisch', sans-serif; /* Use specific font */
+}
+
+/* Forum Link Styling */
+.forum-link {
+    text-align: center;
+    margin-top: 0; /* Remove top margin */
+    margin-bottom: 1.5rem; /* Add space below the link before next section */
+}
+
+.forum-link a {
+    font-family: 'Vinron', sans-serif; /* Use Vinron Regular */
+    font-size: 1.5rem; /* Set font size */
+    color: #ff8a8a; /* Use light red color */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease;
+}
+
+.forum-link a:hover {
+    color: #ffffff; /* White on hover */
+}
+
+/* Gallery Styles */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+    gap: 20px; /* Space between images */
+    margin-top: 20px;
+}
+
+.gallery-grid img {
+    width: 100%; /* Make image fill the grid cell */
+    height: auto; /* Maintain aspect ratio */
+    border: 3px solid #444; /* Add a border to create a "box" */
+    border-radius: 5px; /* Slightly rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4); /* Subtle shadow */
+    display: block; /* Remove extra space below image */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transition on hover */
+}
+
+.gallery-grid img:hover {
+    transform: scale(1.03); /* Slightly enlarge image on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6); /* Enhance shadow on hover */
+} 
