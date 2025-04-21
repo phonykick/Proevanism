@@ -26,8 +26,8 @@ interface User {
 }
 
 // --- Upload Directory Setup ---
-// Correct path: Go up one level from dist/ to the project root
-const uploadDir = path.resolve(__dirname, '../public/uploads/gallery');
+// Path is relative to dist/ now, as it's copied by build script
+const uploadDir = path.resolve(__dirname, 'public/uploads/gallery');
 // Ensure upload directory exists
 if (!fs.existsSync(uploadDir)){
     fs.mkdirSync(uploadDir, { recursive: true });
@@ -52,8 +52,8 @@ const upload = multer({ storage: storage });
 
 // --- Database Setup ---
 sqlite3.verbose(); // Enable verbose mode for detailed logs
-// Correct path: Go up one level from dist/ to the project root
-const dbPath = path.resolve(__dirname, '../database.db');
+// Path is relative to dist/ now
+const dbPath = path.resolve(__dirname, 'database.db');
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error('Error opening database:', err.message);
@@ -189,13 +189,18 @@ app.post('/logout', (req: Request, res: Response, next: NextFunction) => {
 });
 // --- End Authentication Routes ---
 
+// Serve static files from within the dist directory
+app.use(express.static(__dirname)); // Serve files from dist/ (e.g., index.html, style.css)
+app.use(express.static(path.join(__dirname, 'public'))); // Serve files from dist/public/
+
+// Add db object to request for use in handlers (optional but can be useful)
+// ... existing code ...
+
 // --- Protected Page Routes ---
 // Protect the admin page itself
 app.get('/admin.html', isAuthenticated, (req: Request, res: Response) => {
-    // If authenticated, serve the admin.html file
-    // Note: express.static may no longer serve this if we removed it?
-    // Explicitly send the file.
-    res.sendFile(path.resolve(__dirname, '../admin.html')); // Corrected path
+    // File is now inside dist/
+    res.sendFile(path.resolve(__dirname, 'admin.html'));
 });
 // --- End Protected Page Routes ---
 
@@ -243,7 +248,7 @@ app.get('/api/gallery/images', (req: Request, res: Response) => {
     });
 });
 
-// DELETE route to remove a gallery image by ID
+// DELETE route to remove a gallery image by ID (now protected)
 app.delete('/api/gallery/images/:id', isAuthenticated, (req: Request, res: Response) => {
     const imageId = req.params.id;
 
@@ -261,9 +266,9 @@ app.delete('/api/gallery/images/:id', isAuthenticated, (req: Request, res: Respo
             return;
         }
 
-        const relativeFilePath = row.filepath;
-        // Construct absolute path for deletion (relative to project root)
-        const absoluteFilePath = path.resolve(__dirname, '../../public', relativeFilePath);
+        const relativeFilePath = row.filepath; // This path should still be relative to 'public' (e.g., 'uploads/gallery/...')
+        // Construct absolute path for deletion (relative to dist/public now)
+        const absoluteFilePath = path.resolve(__dirname, 'public', relativeFilePath);
 
         // 2. Delete the physical file
         fs.unlink(absoluteFilePath, (unlinkErr) => {
