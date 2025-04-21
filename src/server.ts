@@ -189,6 +189,13 @@ app.post('/logout', (req: Request, res: Response, next: NextFunction) => {
 });
 // --- End Authentication Routes ---
 
+// --- Explicit Root Route ---
+// Serve index.html from within the dist directory
+app.get('/', (req: Request, res: Response) => {
+    res.sendFile(path.resolve(__dirname, 'index.html'));
+});
+// --- End Explicit Root Route ---
+
 // Serve static files from within the dist directory
 app.use(express.static(__dirname)); // Serve files from dist/ (e.g., index.html, style.css)
 app.use(express.static(path.join(__dirname, 'public'))); // Serve files from dist/public/
