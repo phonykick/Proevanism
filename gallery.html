@@ -28,14 +28,9 @@
             <section id="gallery">
                 <h2>Gallery</h2>
                 <p>A collection showcasing the beauty of Proevanism.</p>
-                <!-- Add gallery items here -->
-                <div class="gallery-grid">
-                    <img src="public/Untitled13_20250317070255.png" alt="Gallery Image 1">
-                    <img src="public/IMG_2162.jpg" alt="Gallery Image 2">
-                    <img src="public/IMG_0483.png" alt="Gallery Image 3">
-                    <img src="public/Untitled12_20250317003955.png" alt="Gallery Image 4">
-                    <img src="public/Untitled15_20250317193339.png" alt="Gallery Image 5">
-                    <img src="public/IMG_2765.gif" alt="Gallery Image 6">
+                <!-- Gallery items will be loaded dynamically -->
+                <div class="gallery-grid" id="galleryGrid">
+                    <p>Loading gallery...</p>
                 </div>
             </section>
         </main>
@@ -45,7 +40,41 @@
         </footer>
     </div>
 
-    <!-- If you have JS specific to the gallery, link it here -->
-    <!-- <script src="dist/gallery.js"></script> -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const galleryGrid = document.getElementById('galleryGrid');
+
+            async function loadGalleryImages() {
+                try {
+                    const response = await fetch('/api/gallery/images');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+
+                    if (data.success && data.images.length > 0) {
+                        galleryGrid.innerHTML = ''; // Clear loading message
+                        data.images.forEach(image => {
+                            const imgElement = document.createElement('img');
+                            imgElement.src = image.filepath; // Use the path from the API
+                            imgElement.alt = image.filename; // Use filename as alt text
+                            // You might want to add error handling for image loading itself
+                            // imgElement.onerror = () => { /* handle error */ };
+                            galleryGrid.appendChild(imgElement);
+                        });
+                    } else if (data.success) {
+                        galleryGrid.innerHTML = '<p>No images found in the gallery yet.</p>';
+                    } else {
+                        galleryGrid.innerHTML = `<p>Error loading images: ${data.message || 'Unknown error'}</p>`;
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch gallery images:', error);
+                    galleryGrid.innerHTML = '<p>Could not load the gallery. Please try again later.</p>';
+                }
+            }
+
+            loadGalleryImages();
+        });
+    </script>
 </body>
 </html> 

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body.admin-page-body { font-family: sans-serif; margin: 20px; }
+        #imageList div { border: 1px solid #ccc; margin-bottom: 10px; padding: 10px; display: flex; align-items: center; }
+        #imageList img { max-width: 100px; max-height: 100px; margin-right: 15px; }
+        #imageList button { background-color: #f44336; color: white; border: none; padding: 5px 10px; cursor: pointer; margin-left: auto; }
+        #uploadForm { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; background-color: #f9f9f9; }
+        #message { margin-top: 10px; padding: 10px; border-radius: 4px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body class="admin-page-body">
+
+    <h1>Gallery Admin Panel</h1>
+
+    <div id="uploadForm">
+        <h2>Upload New Image</h2>
+        <form id="imageUploadForm">
+            <input type="file" name="imageFile" id="imageFile" accept="image/*" required>
+            <button type="submit">Upload</button>
+        </form>
+        <div id="message"></div>
+    </div>
+
+    <h2>Current Images</h2>
+    <div id="imageList">
+        <!-- Images will be loaded here by JavaScript -->
+        Loading images...
+    </div>
+
+    <script>
+        const imageListDiv = document.getElementById('imageList');
+        const uploadForm = document.getElementById('imageUploadForm');
+        const imageFileInput = document.getElementById('imageFile');
+        const messageDiv = document.getElementById('message');
+
+        // Function to display messages
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            setTimeout(() => messageDiv.textContent = '', 5000); // Clear message after 5 seconds
+        }
+
+        // Function to fetch and display images
+        async function fetchImages() {
+            imageListDiv.innerHTML = 'Loading images...'; // Clear previous list
+            try {
+                const response = await fetch('/api/gallery/images');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                if (data.success && data.images.length > 0) {
+                    imageListDiv.innerHTML = ''; // Clear loading message
+                    data.images.forEach(image => {
+                        const div = document.createElement('div');
+                        div.innerHTML = `
+                            <img src="${image.filepath}" alt="${image.filename}">
+                            <span>${image.filename} (ID: ${image.id})</span>
+                            <button onclick="deleteImage(${image.id})">Delete</button>
+                        `;
+                        imageListDiv.appendChild(div);
+                    });
+                } else if (data.success) {
+                    imageListDiv.innerHTML = 'No images found in the gallery.';
+                } else {
+                    imageListDiv.innerHTML = `Error loading images: ${data.message}`;
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                imageListDiv.innerHTML = 'Failed to load images. Check console for details.';
+                showMessage('Failed to load images.', 'error');
+            }
+        }
+
+        // Function to delete an image
+        async function deleteImage(id) {
+            if (!confirm('Are you sure you want to delete this image?')) {
+                return;
+            }
+            try {
+                const response = await fetch(`/api/gallery/images/${id}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    showMessage('Image deleted successfully!', 'success');
+                    fetchImages(); // Refresh the list
+                } else {
+                    showMessage(`Error deleting image: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                showMessage('Failed to delete image. Check console for details.', 'error');
+            }
+        }
+
+        // Handle form submission
+        uploadForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            messageDiv.textContent = 'Uploading...';
+            messageDiv.className = 'message';
+
+            const formData = new FormData();
+            formData.append('imageFile', imageFileInput.files[0]);
+
+            try {
+                const response = await fetch('/api/gallery/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.success) {
+                    showMessage('Image uploaded successfully!', 'success');
+                    uploadForm.reset(); // Clear the form
+                    fetchImages(); // Refresh the list
+                } else {
+                    showMessage(`Error uploading image: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                showMessage('Failed to upload image. Check console for details.', 'error');
+            }
+        });
+
+        // Initial load of images
+        fetchImages();
+
+    </script>
+
+</body>
+</html> 
