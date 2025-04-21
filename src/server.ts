@@ -189,22 +189,18 @@ app.post('/logout', (req: Request, res: Response, next: NextFunction) => {
 });
 // --- End Authentication Routes ---
 
-// Serve static files (like HTML, CSS, frontend JS) from the root and public directories
-app.use(express.static(path.join(__dirname, '../'))); // Corrected: Serve files from project root (relative to dist/)
-app.use(express.static(path.join(__dirname, '../public'))); // Corrected: Serve files from public/ (relative to dist/)
-
-// Add db object to request for use in handlers (optional but can be useful)
-app.use((req, res, next) => {
-  (req as any).db = db;
-  next();
+// --- Protected Page Routes ---
+// Protect the admin page itself
+app.get('/admin.html', isAuthenticated, (req: Request, res: Response) => {
+    // If authenticated, serve the admin.html file
+    // Note: express.static may no longer serve this if we removed it?
+    // Explicitly send the file.
+    res.sendFile(path.resolve(__dirname, '../admin.html')); // Corrected path
 });
+// --- End Protected Page Routes ---
 
-// Simple route for testing
-app.get('/api/hello', (req: Request, res: Response) => {
-  res.json({ message: 'Hello from the backend!' });
-});
-
-// POST route for uploading gallery images
+// --- Protected Gallery API Routes ---
+// Apply isAuthenticated middleware to protect these routes
 app.post('/api/gallery/upload', isAuthenticated, upload.single('imageFile'), (req: Request, res: Response) => {
     if (!req.file) {
         res.status(400).json({ success: false, message: 'No file uploaded.' });
@@ -305,49 +301,6 @@ app.delete('/api/gallery/images/:id', isAuthenticated, (req: Request, res: Respo
                 return;
             });
         });
-    });
-});
-
-// --- Protected Page Routes ---
-// Protect the admin page itself
-app.get('/admin.html', isAuthenticated, (req: Request, res: Response) => {
-    // If authenticated, serve the admin.html file
-    // Note: express.static already handles serving static files if placed correctly.
-    // This route primarily ensures authentication before the static handler serves it.
-    // We might need to adjust static file serving if this causes issues.
-    // For now, let the static handler do its job after auth check.
-    // Alternatively, explicitly send the file:
-    res.sendFile(path.resolve(__dirname, '../../admin.html'));
-});
-// --- End Protected Page Routes ---
-
-// --- Protected Gallery API Routes ---
-// Apply isAuthenticated middleware to protect these routes
-app.post('/api/gallery/upload', isAuthenticated, upload.single('imageFile'), (req: Request, res: Response) => {
-    if (!req.file) {
-        res.status(400).json({ success: false, message: 'No file uploaded.' });
-        return;
-    }
-
-    const filename = req.file.filename;
-    // Store relative path for easier serving later
-    const relativeFilePath = path.join('uploads/gallery', filename).replace(/\\/g, '/');
-    const absoluteFilePath = req.file.path; // Store absolute path for potential deletion
-
-    const sql = `INSERT INTO gallery_images (filename, filepath) VALUES (?, ?)`;
-    db.run(sql, [filename, relativeFilePath], function(err) {
-        if (err) {
-            console.error('Error inserting image into database:', err.message);
-            // Clean up uploaded file if DB insert fails
-            fs.unlink(absoluteFilePath, (unlinkErr) => { // Use stored path
-                if (unlinkErr) console.error('Error deleting file after DB error:', unlinkErr);
-            });
-            res.status(500).json({ success: false, message: 'Database error.' });
-            return;
-        }
-        console.log(`Image ${filename} uploaded and added to DB with ID ${this.lastID}`);
-        res.json({ success: true, message: 'File uploaded successfully!', file: { filename, filepath: relativeFilePath } });
-        return;
     });
 });
 

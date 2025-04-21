@@ -4,12 +4,35 @@
     {
       "src": "./package.json",
       "use": "@vercel/node",
-      "config": { "includeFiles": ["dist/**", "public/**", "*.html", "style.css"] }
+      "config": { 
+        "includeFiles": [
+          "dist/**", 
+          "public/**", 
+          "*.html", 
+          "style.css", 
+          "fonts/**" 
+        ]
+      }
     }
   ],
   "routes": [
+    { "handle": "filesystem" },
     {
-      "src": "/(.*)",
+      "src": "/api/(.*)",
+      "dest": "/dist/server.js"
+    },
+    {
+      "src": "/login",
+      "methods": ["POST"],
+      "dest": "/dist/server.js"
+    },
+     {
+      "src": "/logout",
+      "methods": ["POST"],
+      "dest": "/dist/server.js"
+    },
+    {
+      "src": "/admin.html",
       "dest": "/dist/server.js"
     }
   ]
